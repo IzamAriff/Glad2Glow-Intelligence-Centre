@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Inter, sans-serif;
+}
+h1, h2, h3, h4, .font-heading {
+  font-family: Poppins, sans-serif;
+}
+.tab-btn.active {
+  background-color: #9560e8;
+  color: #fff;
+  box-shadow: 0 4px 10px -1px rgba(149, 96, 232, 0.35);
+}
+.dark .tab-btn.active {
+  background-color: #9560e8;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ffb6c1;
+  border-radius: 4px;
+}

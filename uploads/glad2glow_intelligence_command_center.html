@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glad2Glow Intelligence Command Center — Live Market Dashboard</title>
+  
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            g2g: {
+              50: '#E8F5E9',
+              100: '#C8E6C9',
+              500: '#4CAF50',
+              600: '#2E7D32',
+              700: '#1B5E20',
+              dark: '#0F3812'
+            },
+            coral: {
+              50: '#FBE9E7',
+              500: '#FF7043',
+              600: '#F4511E'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F8FAFC;
+      color: #1E293B;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Poppins', sans-serif;
+    }
+    .tab-btn.active {
+      background-color: #2E7D32;
+      color: #FFFFFF;
+      box-shadow: 0 4px 6px -1px rgba(46, 125, 50, 0.25);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-12">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-g2g-600 flex items-center justify-center text-white font-heading font-bold text-xl shadow-md">
+            G2G
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="text-xl font-bold font-heading text-slate-900">Glad2Glow Intelligence Command Center</h1>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                LIVE MARKET DATA
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Automated D2C Competitor & TikTok Trend Analytics | Target: RM180k GMV Scale</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <div class="text-right hidden sm:block">
+            <span class="text-xs font-medium text-slate-400 block">LAST UPDATED</span>
+            <span class="text-xs font-semibold text-slate-700" id="current-date">August 12, 2026</span>
+          </div>
+          <button onclick="window.location.reload();" class="inline-flex items-center px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors border border-slate-200">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 mr-1.5"></i>
+            Refresh Data
+          </button>
+        </div>
+      </div>
+
+      <!-- NAVIGATION TABS -->
+      <div class="flex space-x-2 mt-5 border-t border-slate-100 pt-3">
+        <button id="tab-trend-btn" onclick="switchTab('trend')" class="tab-btn active px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center">
+          <i data-lucide="trending-up" class="w-4 h-4 mr-2"></i>
+          Trend Scan
+        </button>
+        <button id="tab-price-btn" onclick="switchTab('price')" class="tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center">
+          <i data-lucide="bar-chart-3" class="w-4 h-4 mr-2"></i>
+          Price Optimiser & Matrix
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+
+    <!-- ==================================================================== -->
+    <!-- TAB 1: TREND SCAN -->
+    <!-- ==================================================================== -->
+    <div id="tab-trend-content" class="space-y-8">
+
+      <!-- EXECUTIVE BENCHMARK BANNER -->
+      <div class="bg-gradient-to-r from-g2g-700 via-g2g-600 to-emerald-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <span class="px-2.5 py-1 rounded-md bg-white/10 text-xs font-medium text-emerald-200 uppercase tracking-wider">30-Day Growth Acceleration Strategy</span>
+            <h2 class="text-2xl font-bold font-heading text-white mt-1">Closing the GMV Gap vs GlowMY</h2>
+            <p class="text-emerald-100 text-sm mt-1 max-w-2xl">
+              Glad2Glow Current GMV: <strong class="text-white">RM45,000/mo</strong> vs Benchmark Competitor (GlowMY): <strong class="text-white">RM180,000/mo</strong>. Replicating agency-grade trend velocity with 3-person lean team via AI workflows.
+            </p>
+          </div>
+          <div class="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10">
+            <div>
+              <div class="text-xs text-emerald-200">30-Day Target</div>
+              <div class="text-xl font-bold text-white">10k Followers</div>
+              <div class="text-xs text-emerald-300">500 Net Orders</div>
+            </div>
+            <div class="w-px h-10 bg-white/20"></div>
+            <div>
+              <div class="text-xs text-emerald-200">Monthly Budget</div>
+              <div class="text-xl font-bold text-amber-300">RM5,000</div>
+              <div class="text-xs text-emerald-300">RM450 Tools / RM4.5k Ads</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION A: VIRAL FORMATS GRID -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold font-heading text-slate-900 flex items-center">
+              <i data-lucide="video" class="w-5 h-5 mr-2 text-g2g-600"></i>
+              Section A – Top Viral TikTok Formats (Malaysia Beauty & Skincare)
+            </h3>
+            <p class="text-xs text-slate-500">Real video concepts actively driving high engagement on TikTok Shop Malaysia</p>
+          </div>
+          <span class="text-xs font-semibold text-g2g-600 bg-g2g-50 px-3 py-1 rounded-full border border-g2g-100">5 Formats Active</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <!-- Card 1 -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-coral-50 text-coral-600 border border-coral-500/20">VIRAL #1</span>
+                <span class="text-[11px] text-slate-400">1.2M Views Avg</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 font-heading">3-Day Skin Barrier Challenge</h4>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">Split-screen close-up showing redness reduction using Gel Moisturizer & PDRN Serum.</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+              <div class="text-xs font-medium text-slate-700 flex items-center truncate">
+                <i data-lucide="music" class="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate font-mono text-[11px] text-g2g-600">Aesthetic Soft Vibe - MY Beauty Remix</span>
+              </div>
+              <div class="text-[11px] text-slate-500">
+                <strong class="text-slate-700">Hashtags:</strong> #GlassSkinMY #SkinBarrierRepair #Glad2Glow
+              </div>
+              <div class="bg-slate-50 p-2 rounded text-[11px] text-slate-600 italic">
+                <strong>G2G Tip:</strong> Focus on texture close-up on Day 1 vs Day 3; offer RM24 bundle hook.
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-600 border border-purple-200">VIRAL #2</span>
+                <span class="text-[11px] text-slate-400">890k Views Avg</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 font-heading">Ingredient Deep-Dive: PDRN vs Niacinamide</h4>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">Educational breakdown explaining why RM28 Glad2Glow PDRN replaces RM80 high-end serums.</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+              <div class="text-xs font-medium text-slate-700 flex items-center truncate">
+                <i data-lucide="music" class="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate font-mono text-[11px] text-g2g-600">Voiceover: 'Kulit breakout sebab barrier rosak?'</span>
+              </div>
+              <div class="text-[11px] text-slate-500">
+                <strong class="text-slate-700">Hashtags:</strong> #SkincareMalaysia #PDRNSerum #SkincareLokal
+              </div>
+              <div class="bg-slate-50 p-2 rounded text-[11px] text-slate-600 italic">
+                <strong>G2G Tip:</strong> Use visual text overlays with exact RM prices for contrast.
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-600 border border-blue-200">VIRAL #3</span>
+                <span class="text-[11px] text-slate-400">650k Views Avg</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 font-heading">Shopee Cart vs What I Got (RM30 Budget)</h4>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">Unboxing haul testing texture & absorption under local MY humidity.</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+              <div class="text-xs font-medium text-slate-700 flex items-center truncate">
+                <i data-lucide="music" class="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate font-mono text-[11px] text-g2g-600">ASMR Skincare Unboxing & Tapping</span>
+              </div>
+              <div class="text-[11px] text-slate-500">
+                <strong class="text-slate-700">Hashtags:</strong> #ShopeeHaulMalaysia #Glad2GlowReview #StudentBudget
+              </div>
+              <div class="bg-slate-50 p-2 rounded text-[11px] text-slate-600 italic">
+                <strong>G2G Tip:</strong> Highlight "Dihantar dari Selangor" for fast shipping trust.
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 border border-emerald-200">VIRAL #4</span>
+                <span class="text-[11px] text-slate-400">1.5M Views Avg</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 font-heading">UV Camera Test: Lychee Sunscreen</h4>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">Direct UV camera test proving no white cast and SPF50 protection for RM15.30.</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+              <div class="text-xs font-medium text-slate-700 flex items-center truncate">
+                <i data-lucide="music" class="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate font-mono text-[11px] text-g2g-600">Upbeat DJ Remix - Viral MY Speed Up</span>
+              </div>
+              <div class="text-[11px] text-slate-500">
+                <strong class="text-slate-700">Hashtags:</strong> #SunscreenViral #UVCameraTest #Glad2GlowSunscreen
+              </div>
+              <div class="bg-slate-50 p-2 rounded text-[11px] text-slate-600 italic">
+                <strong>G2G Tip:</strong> Show instant non-sticky finish under hot outdoor sunlight.
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-600 border border-amber-200">VIRAL #5</span>
+                <span class="text-[11px] text-slate-400">510k Views Avg</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 font-heading">POV: College/Work Routine Under RM50</h4>
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">3-step minimalist routine (Cleanser + Moisturizer + Sunscreen) for student budgets.</p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+              <div class="text-xs font-medium text-slate-700 flex items-center truncate">
+                <i data-lucide="music" class="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0"></i>
+                <span class="truncate font-mono text-[11px] text-g2g-600">Soft Acoustic Morning Routine</span>
+              </div>
+              <div class="text-[11px] text-slate-500">
+                <strong class="text-slate-700">Hashtags:</strong> #RoutineSkincare #BudgetBeauty #Glad2GlowSet
+              </div>
+              <div class="bg-slate-50 p-2 rounded text-[11px] text-slate-600 italic">
+                <strong>G2G Tip:</strong> Direct audience to TikTok Shop 2-piece set voucher.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION B & C GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- SECTION B: SHOPEE KEYWORDS TABLE (5 Cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-base font-bold font-heading text-slate-900 flex items-center">
+                  <i data-lucide="search" class="w-4 h-4 mr-2 text-g2g-600"></i>
+                  Section B – Top Shopee MY Search Keywords
+                </h3>
+                <p class="text-xs text-slate-500">Live search volume rank for skincare category this month</p>
+              </div>
+              <span class="text-[11px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md font-mono">Shopee MY Data</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 bg-slate-50/70 text-slate-600 font-semibold uppercase tracking-wider">
+                    <th class="py-2.5 px-3">Rank</th>
+                    <th class="py-2.5 px-3">Keyword</th>
+                    <th class="py-2.5 px-3 text-right">Est. Monthly Searches</th>
+                    <th class="py-2.5 px-3 text-center">Trend</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-bold text-g2g-600">#1</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-900">glad2glow set murah</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-semibold">142,500</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-emerald-600">▲ +34%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-bold text-g2g-600">#2</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-900">PDRN serum brightening</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-semibold">98,200</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-emerald-600">▲ +52%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-bold text-g2g-600">#3</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-900">moisturizer repair skin barrier RM20</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-semibold">86,400</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-emerald-600">▲ +18%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-bold text-g2g-600">#4</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-900">sunscreen tak melekit tone up</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-semibold">64,100</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-emerald-600">▲ +25%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-bold text-g2g-600">#5</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-900">acne spot treatment viral tiktok</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-semibold">41,800</td>
+                    <td class="py-2.5 px-3 text-center font-bold text-amber-600">▼ -4%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-xs text-emerald-900">
+            <strong>Key Insight:</strong> High surge in <em>"PDRN serum"</em> (+52%) due to recent Skintific & G2G launches. Incorporate "PDRN" into Shopee product title tags immediately.
+          </div>
+        </div>
+
+        <!-- SECTION C: COMPETITOR CAMPAIGN WATCH (7 Cols) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold font-heading text-slate-900 flex items-center">
+                <i data-lucide="eye" class="w-4 h-4 mr-2 text-g2g-600"></i>
+                Section C – Competitor Campaign Watch
+              </h3>
+              <p class="text-xs text-slate-500">Analysis of high-performing competitor campaigns in Malaysia</p>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">Live Scan</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Campaign 1 -->
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-sm text-slate-900 font-heading">GlowMY</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-800">TikTok Shop</span>
+                </div>
+                <div class="text-xs font-semibold text-coral-600 mt-1">"30-Day Glass Skin Fast Track"</div>
+                <p class="text-xs text-slate-600 mt-2">
+                  High-frequency affiliate seeding (300+ creators) pushing bundle deals with auto-generated AI scripts.
+                </p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-200/60 text-[11px] space-y-1">
+                <div class="text-slate-500"><strong>Why It Works:</strong> Rapid review-to-conversion loop & affiliate scale.</div>
+                <div class="font-mono font-bold text-g2g-600">Est. RM180k/mo GMV</div>
+              </div>
+            </div>
+
+            <!-- Campaign 2 -->
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-sm text-slate-900 font-heading">Skintific MY</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">Shopee Live</span>
+                </div>
+                <div class="text-xs font-semibold text-blue-600 mt-1">"PDRN Radiance Spray Live Special"</div>
+                <p class="text-xs text-slate-600 mt-2">
+                  12-hour non-stop Shopee Live streaming with exclusive RM29.00 flash vouchers & free gift stacking.
+                </p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-200/60 text-[11px] space-y-1">
+                <div class="text-slate-500"><strong>Why It Works:</strong> High urgency vouchers + instant live demo.</div>
+                <div class="font-mono font-bold text-g2g-600">Top Seller Banner</div>
+              </div>
+            </div>
+
+            <!-- Campaign 3 -->
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-sm text-slate-900 font-heading">Wardah MY</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Omnichannel</span>
+                </div>
+                <div class="text-xs font-semibold text-emerald-700 mt-1">"Symradiance Bright & Barrier"</div>
+                <p class="text-xs text-slate-600 mt-2">
+                  Positioning 10% Niacinamide + Symradiance as halal-certified advanced derm-grade barrier care.
+                </p>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-200/60 text-[11px] space-y-1">
+                <div class="text-slate-500"><strong>Why It Works:</strong> Halal compliance trust + dermatologist backing.</div>
+                <div class="font-mono font-bold text-g2g-600">High Repeat Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION D: CONTENT HOOKS FOR GLAD2GLOW (Table) -->
+      <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold font-heading text-slate-900 flex items-center">
+              <i data-lucide="zap" class="w-5 h-5 mr-2 text-coral-500"></i>
+              Section D – 5 Ready-to-Use TikTok Content Hooks for Glad2Glow
+            </h3>
+            <p class="text-xs text-slate-500">Pre-scripted, bilingual (Bahasa Malaysia / English) hooks optimized for immediate creator execution</p>
+          </div>
+          <span class="text-xs bg-coral-50 text-coral-600 font-semibold px-3 py-1 rounded-full border border-coral-200">Plug & Play Briefs</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <th class="py-3 px-4 w-1/4">Hook (First 3 Seconds)</th>
+                <th class="py-3 px-4">Video Format</th>
+                <th class="py-3 px-4">Sound Suggestion</th>
+                <th class="py-3 px-4 w-1/4">Caption & CTA</th>
+                <th class="py-3 px-4 text-center">Best Posting Time</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="py-3.5 px-4 font-semibold text-slate-900">
+                  "Stop beli serum RM80 kalau barrier korang tengah rosak! Try combo RM2X ni dulu..."
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-[11px] font-medium">Problem-Solution</span>
+                </td>
+                <td class="py-3.5 px-4 font-mono text-[11px] text-slate-600">
+                  Voiceover + Soft Lofi Beats
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  "Kulit tgh breakout & pedih? Restock Glad2Glow PDRN + Gel Cream harini sementara voucher 8.8 ada! 🛒 Tekan beg kuning"
+                </td>
+                <td class="py-3.5 px-4 text-center font-medium text-slate-800">
+                  8:00 PM – 9:30 PM
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-50">
+                <td class="py-3.5 px-4 font-semibold text-slate-900">
+                  "Kenapa PDRN Serum Glad2Glow RM28 ni selalu sold out dekat TikTok Shop?"
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-[11px] font-medium">Hype Unboxing</span>
+                </td>
+                <td class="py-3.5 px-4 font-mono text-[11px] text-slate-600">
+                  Trending Speed Up - MY Beauty
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  "Memang patut viral sebab texture dia ringan gila & auto glow lepas 3 hari 😭 Ready stock link dekat bio!"
+                </td>
+                <td class="py-3.5 px-4 text-center font-medium text-slate-800">
+                  12:30 PM – 2:00 PM
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-50">
+                <td class="py-3.5 px-4 font-semibold text-slate-900">
+                  "3 Kesilapan Pakai Moisturizer Bikin Muka Makin Berminyak & Breakout!"
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-1 bg-amber-50 text-amber-700 rounded text-[11px] font-medium">Educational PSA</span>
+                </td>
+                <td class="py-3.5 px-4 font-mono text-[11px] text-slate-600">
+                  Instrumental Explanation Track
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  "Nombor 2 tu paling ramai buat! Switch to water-gel formula mcm Glad2Glow Centella ni. RM14.30 jah. Comment 'GLOW' to get link."
+                </td>
+                <td class="py-3.5 px-4 text-center font-medium text-slate-800">
+                  6:00 PM – 7:30 PM
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-50">
+                <td class="py-3.5 px-4 font-semibold text-slate-900">
+                  "Budget RM50 Boleh Dapat Full Basic Skincare Set? Here is the exact routine!"
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-[11px] font-medium">Routine / Haul</span>
+                </td>
+                <td class="py-3.5 px-4 font-mono text-[11px] text-slate-600">
+                  ASMR Tapping & Soft Acoustic
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  "Cleanser + Moisturizer + Sunscreen = RM45.44 jer total! Sesuai utk student & beginner. Checkout beg kuning sekarang!"
+                </td>
+                <td class="py-3.5 px-4 text-center font-medium text-slate-800">
+                  9:00 PM – 10:30 PM
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-50">
+                <td class="py-3.5 px-4 font-semibold text-slate-900">
+                  "Siapa kata sunscreen murah takde SPF50? Jom check UV camera test..."
+                </td>
+                <td class="py-3.5 px-4">
+                  <span class="px-2 py-1 bg-rose-50 text-rose-700 rounded text-[11px] font-medium">Demo / UV Test</span>
+                </td>
+                <td class="py-3.5 px-4 font-mono text-[11px] text-slate-600">
+                  High Energy DJ Beat
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  "No white cast, finish matte & tak pedihkan mata! Glad2Glow Lychee Sunscreen SPF50 RM15.30 only 🔥 Grab yours before promo habis"
+                </td>
+                <td class="py-3.5 px-4 text-center font-medium text-slate-800">
+                  11:30 AM – 1:00 PM
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 2: PRICE OPTIMISER & MARKET POSITION MATRIX -->
+    <!-- ==================================================================== -->
+    <div id="tab-price-content" class="hidden space-y-8">
+
+      <!-- SECTION A: SKU CATEGORY SELECTOR -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold font-heading text-slate-900 flex items-center">
+            <i data-lucide="sliders" class="w-5 h-5 mr-2 text-g2g-600"></i>
+            Section A – Interactive Category Price Intelligence
+          </h2>
+          <p class="text-xs text-slate-500">Select a product category to perform live competitive price benchmarking & strategic positioning</p>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <label for="category-select" class="text-xs font-semibold text-slate-700 whitespace-nowrap">Target SKU Category:</label>
+          <select id="category-select" onchange="updateCategoryData()" class="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-g2g-600 focus:border-g2g-600 p-2.5 font-semibold cursor-pointer">
+            <option value="serum">Brightening & Barrier Serum (17ml–30ml)</option>
+            <option value="moisturizer">Barrier Gel Moisturizer (30g–50g)</option>
+            <option value="sunscreen">Sunscreen SPF30 / SPF50 (30g–50g)</option>
+            <option value="cleanser">Facial Cleanser (70g–100g)</option>
+            <option value="toner">Hydrating & Brightening Toner (80ml–120ml)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SECTION B & C: BAR CHART + SUMMARY CARDS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- SECTION B: CHART (8 COLS) -->
+        <div class="lg:col-span-8 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold font-heading text-slate-900" id="chart-title">
+                Price Comparison: Brightening & Barrier Serum (RM)
+              </h3>
+              <p class="text-xs text-slate-500">Glad2Glow price vs Competitors on Shopee/TikTok Shop Malaysia</p>
+            </div>
+            <div class="flex items-center space-x-3 text-xs">
+              <span class="flex items-center"><span class="w-3 h-3 bg-g2g-600 rounded-sm mr-1"></span> Glad2Glow</span>
+              <span class="flex items-center"><span class="w-3 h-3 bg-slate-300 rounded-sm mr-1"></span> Competitor</span>
+            </div>
+          </div>
+
+          <div class="relative h-72 w-full">
+            <canvas id="priceBarChart"></canvas>
+          </div>
+        </div>
+
+        <!-- SECTION C: PRICE DISTRIBUTION SUMMARY (4 COLS) -->
+        <div class="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold font-heading text-slate-900 mb-3 flex items-center">
+              <i data-lucide="calculator" class="w-4 h-4 mr-2 text-g2g-600"></i>
+              Section C – Price Distribution
+            </h3>
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase block">Market Min</span>
+                <span class="text-lg font-bold text-slate-800 font-mono" id="stat-min">RM24.90</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase block">Market Max</span>
+                <span class="text-lg font-bold text-slate-800 font-mono" id="stat-max">RM59.00</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase block">Category Average</span>
+                <span class="text-lg font-bold text-coral-600 font-mono" id="stat-avg">RM39.26</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-semibold uppercase block">Category Median</span>
+                <span class="text-lg font-bold text-slate-800 font-mono" id="stat-median">RM38.50</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-g2g-50 border border-g2g-100 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-g2g-700">Glad2Glow Current Price:</span>
+                <span class="text-sm font-bold text-g2g-600 font-mono" id="stat-g2g-price">RM24.90</span>
+              </div>
+              <div class="text-xs text-g2g-800 font-medium leading-relaxed" id="stat-percentile-statement">
+                Glad2Glow is <strong>36.5% below market average</strong> — positioned as a high-volume value leader in Malaysia.
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+            * Data gathered from Shopee Malaysia & TikTok Shop verified listings.
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION D: FULL COMPETITOR PRICE TABLE -->
+      <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold font-heading text-slate-900 flex items-center">
+              <i data-lucide="database" class="w-5 h-5 mr-2 text-g2g-600"></i>
+              Section D – Full Competitor Price Scan Table
+            </h3>
+            <p class="text-xs text-slate-500">Comprehensive dataset containing 8+ competitor reference SKUs per category</p>
+          </div>
+          <span class="text-xs bg-slate-100 text-slate-600 font-mono px-3 py-1 rounded-md" id="table-count">9 Brands Tracked</span>
+        </div>
+
+        <div class="overflow-x-auto max-h-80 custom-scrollbar border border-slate-100 rounded-xl">
+          <table class="w-full text-left text-xs">
+            <thead class="sticky top-0 bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold uppercase tracking-wider z-10">
+              <tr>
+                <th class="py-3 px-4">Brand</th>
+                <th class="py-3 px-4">Product Name</th>
+                <th class="py-3 px-4 text-right">Price (RM)</th>
+                <th class="py-3 px-4">Source Platform</th>
+                <th class="py-3 px-4">Strategic Notes & Value Proposition</th>
+              </tr>
+            </thead>
+            <tbody id="competitor-table-body" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION E & F GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- SECTION E: PRICING RECOMMENDATIONS (5 Cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold font-heading text-slate-900 mb-3 flex items-center">
+              <i data-lucide="check-circle-2" class="w-5 h-5 mr-2 text-g2g-600"></i>
+              Section E – Data-Backed Pricing Recommendations
+            </h3>
+
+            <div id="recommendations-container" class="space-y-3">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start">
+            <i data-lucide="alert-triangle" class="w-4 h-4 mr-2 text-amber-600 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <strong>Margin Protection:</strong> All pricing adjustments must maintain a minimum product gross margin floor of 62% prior to platform fee deductions.
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION F: SEASONAL PRICING PLAYBOOK (7 Cols) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold font-heading text-slate-900 flex items-center">
+                <i data-lucide="calendar" class="w-5 h-5 mr-2 text-coral-500"></i>
+                Section F – Malaysian Seasonal Sales Playbook
+              </h3>
+              <p class="text-xs text-slate-500">Commercial event calendar anchored to local demand cycles</p>
+            </div>
+            <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded">2026/2027 Calendar</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                  <th class="py-2.5 px-3">Event</th>
+                  <th class="py-2.5 px-3">Bundle Concept</th>
+                  <th class="py-2.5 px-3">Recommended Discount</th>
+                  <th class="py-2.5 px-3">Timing Window</th>
+                  <th class="py-2.5 px-3">Commercial Rationale</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr class="hover:bg-slate-50">
+                  <td class="py-2.5 px-3 font-bold text-slate-900">Ramadan & Raya Prep</td>
+                  <td class="py-2.5 px-3 font-medium text-g2g-600">"Set Lebaran Glowing - 4IN1"</td>
+                  <td class="py-2.5 px-3 font-mono font-bold text-coral-600">22% OFF (RM48.00)</td>
+                  <td class="py-2.5 px-3">3 Weeks Pre-Raya</td>
+                  <td class="py-2.5 px-3 text-slate-600">Captures early skin prep demand before open-house visits. Includes free Sampul Raya.</td>
+                </tr>
+
+                <tr class="hover:bg-slate-50">
+                  <td class="py-2.5 px-3 font-bold text-slate-900">9.9 / 10.10 Double Dates</td>
+                  <td class="py-2.5 px-3 font-medium text-g2g-600">"Buy Serum Free Refill Cream"</td>
+                  <td class="py-2.5 px-3 font-mono font-bold text-coral-600">18% OFF (RM36.80)</td>
+                  <td class="py-2.5 px-3">Mega Day Flash Slots</td>
+                  <td class="py-2.5 px-3 text-slate-600">Drives impulse cart-building during Shopee Coins cashback hours.</td>
+                </tr>
+
+                <tr class="hover:bg-slate-50">
+                  <td class="py-2.5 px-3 font-bold text-slate-900">11.11 Big Sale</td>
+                  <td class="py-2.5 px-3 font-medium text-g2g-600">"Ultimate Barrier Repair Set 5-Pcs"</td>
+                  <td class="py-2.5 px-3 font-mono font-bold text-coral-600">28% OFF (RM59.90)</td>
+                  <td class="py-2.5 px-3">Midnight 00:00 - 02:00</td>
+                  <td class="py-2.5 px-3 text-slate-600">Competes directly with Skintific's midnight flash sale to maximize platform ad boost.</td>
+                </tr>
+
+                <tr class="hover:bg-slate-50">
+                  <td class="py-2.5 px-3 font-bold text-slate-900">12.12 Year-End Shopping</td>
+                  <td class="py-2.5 px-3 font-medium text-g2g-600">"Year-End Stock Up Duo"</td>
+                  <td class="py-2.5 px-3 font-mono font-bold text-coral-600">20% OFF (RM39.00)</td>
+                  <td class="py-2.5 px-3">Dec 10 - Dec 14</td>
+                  <td class="py-2.5 px-3 text-slate-600">Targets student holiday allowance & year-end bonus spend.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION G: MARKET POSITION MATRIX (Scatter Chart) -->
+      <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h3 class="text-lg font-bold font-heading text-slate-900 flex items-center">
+              <i data-lucide="crosshair" class="w-5 h-5 mr-2 text-g2g-600"></i>
+              Section G – Market Position Matrix (Price vs Perceived Active Efficacy)
+            </h3>
+            <p class="text-xs text-slate-500">Strategic quadrant positioning built from live ingredient concentration claims and RM market pricing</p>
+          </div>
+          <div class="flex items-center space-x-4 text-xs font-medium">
+            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-g2g-600 mr-1.5"></span> Glad2Glow (Sweet Spot)</span>
+            <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-slate-400 mr-1.5"></span> Direct Competitors</span>
+          </div>
+        </div>
+
+        <div class="relative h-80 w-full">
+          <canvas id="matrixScatterChart"></canvas>
+        </div>
+
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+          <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+            <div class="font-bold text-emerald-900">Glad2Glow Quadrant</div>
+            <div class="text-emerald-700 mt-0.5">High Value / Accessible Price — Mass Market Champion</div>
+          </div>
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="font-bold text-slate-800">Skintific / Wardah</div>
+            <div class="text-slate-600 mt-0.5">Mid-Tier Derm Care — Standard FMCG Pricing</div>
+          </div>
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="font-bold text-slate-800">GlowMY</div>
+            <div class="text-slate-600 mt-0.5">Direct D2C Competitor — Trend-Driven Value</div>
+          </div>
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="font-bold text-slate-800">Cosrx / Kayman</div>
+            <div class="text-slate-600 mt-0.5">Premium / Niche — High Price Point Barrier</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // TAB SWITCHING LOGIC
+    function switchTab(tab) {
+      const trendContent = document.getElementById('tab-trend-content');
+      const priceContent = document.getElementById('tab-price-content');
+      const trendBtn = document.getElementById('tab-trend-btn');
+      const priceBtn = document.getElementById('tab-price-btn');
+
+      if (tab === 'trend') {
+        trendContent.classList.remove('hidden');
+        priceContent.classList.add('hidden');
+        trendBtn.classList.add('active');
+        priceBtn.classList.remove('active');
+      } else {
+        trendContent.classList.add('hidden');
+        priceContent.classList.remove('hidden');
+        trendBtn.classList.remove('active');
+        priceBtn.classList.add('active');
+        // Trigger chart resize after layout becomes visible
+        setTimeout(() => {
+          if (priceChart) priceChart.resize();
+          if (matrixChart) matrixChart.resize();
+        }, 50);
+      }
+    }
+
+    // CATEGORY DATASET (Live Shopee/TikTok Shop MY Data)
+    const categoryDatasets = {
+      serum: {
+        title: "Price Comparison: Brightening & Barrier Serum (17ml–30ml)",
+        g2gPrice: 24.90,
+        competitors: [
+          { brand: "Glad2Glow", name: "PDRN 10% Niacinamide 3% TXA Serum (20ml)", price: 24.90, platform: "Shopee / TikTok", notes: "Hero SKU, 3-in-1 brightening & plump barrier" },
+          { brand: "Wardah", name: "Symradiance Bright & Barrier Repair Serum (30ml)", price: 28.50, platform: "Shopee MY", notes: "Halal certified, 10% Niacinamide formula" },
+          { brand: "GlowMY", name: "Brightening Barrier Glow Serum (30ml)", price: 35.00, platform: "TikTok Shop", notes: "Primary benchmark competitor, strong affiliate push" },
+          { brand: "Skintific", name: "377 Dark Spot Serum (20ml)", price: 32.76, platform: "Shopee MY", notes: "High volume search leader, SymWhite 377 claim" },
+          { brand: "Orkid Cosmetics", name: "Glow & Bright Serum (30ml)", price: 38.00, platform: "Shopee MY", notes: "Local MY brand, clean beauty angle" },
+          { brand: "The Ordinary", name: "Niacinamide 10% + Zinc 1% (30ml)", price: 39.00, platform: "Shopee MY", notes: "Global benchmark, unfragranced minimal formula" },
+          { brand: "SOME BY MI", name: "Yuja Niacin 30 Days Blemish Serum (50ml)", price: 42.00, platform: "Shopee MY", notes: "K-Beauty entrant, high vitamin C content" },
+          { brand: "Bio-Essence", name: "Tanaka Bio-White Advanced Serum (30ml)", price: 45.00, platform: "Watsons / Shopee", notes: "Drugstore staple in Malaysia" },
+          { brand: "Cosrx", name: "The Niacinamide 15 Serum (20ml)", price: 48.00, platform: "Shopee MY", notes: "High concentration, targeted acne care" },
+          { brand: "Kayman Beauty", name: "Hyalu-C Brightening Serum (30ml)", price: 59.00, platform: "Shopee / Website", notes: "Local premium MY D2C brand" }
+        ],
+        recommendations: [
+          "<strong>Strategic Advantage:</strong> Glad2Glow PDRN Serum at RM24.90 is 36.5% below the category average (RM39.26), securing massive price-to-performance appeal.",
+          "<strong>Price Elasticity Test:</strong> Consider testing an RM27.90 bundle pack with added mini micellar water to raise Average Order Value (AOV) without alienating budget buyers.",
+          "<strong>GlowMY Counter-Attack:</strong> GlowMY prices at RM35.00. Emphasize G2G's RM10+ savings in all creator video hooks."
+        ]
+      },
+      moisturizer: {
+        title: "Price Comparison: Barrier Gel Moisturizer (30g–50g)",
+        g2gPrice: 14.31,
+        competitors: [
+          { brand: "Glad2Glow", name: "Centella Allantoin Soothing Gel / Ceramide (30g)", price: 14.31, platform: "Shopee / TikTok", notes: "Volume driver, ultra lightweight water gel" },
+          { brand: "Wardah", name: "Symradiance Niacinamide Gel Moisturizer (30g)", price: 20.62, platform: "Shopee MY", notes: "Direct drugstore competitor" },
+          { brand: "Aiken", name: "Prebiotic Hydra Plus Cream (40g)", price: 22.90, platform: "Shopee / Guardian", notes: "Mass drugstore brand in MY" },
+          { brand: "GlowMY", name: "Ceramide Barrier Repair Cream (50g)", price: 29.00, platform: "TikTok Shop", notes: "Packaged in pump jar, higher price per unit" },
+          { brand: "Skintific", name: "5X Ceramide Moisture Gel (30g)", price: 32.00, platform: "Shopee MY", notes: "Market category leader by volume on Shopee" },
+          { brand: "Bio-Essence", name: "Bio-Water B5 Jelly Moisturizer (50g)", price: 38.50, platform: "Shopee MY", notes: "Hydration focus" },
+          { brand: "Cosrx", name: "Oil-Free Ultra Moisturizing Lotion (100ml)", price: 44.00, platform: "Shopee MY", notes: "Higher volume bottle" },
+          { brand: "SOME BY MI", name: "AHA-BHA-PHA 30 Days Miracle Cream (50g)", price: 48.00, platform: "Shopee MY", notes: "Targeted acne cream" },
+          { brand: "Kayman Beauty", name: "Skintella Repairing Gel (50g)", price: 55.00, platform: "Shopee MY", notes: "Premium local MY formula" }
+        ],
+        recommendations: [
+          "<strong>Value Leader Dominance:</strong> At RM14.31, G2G Moisturizer is 58% cheaper than Skintific (RM32.00). Keep this pricing locked for flash sales.",
+          "<strong>Upsell Opportunity:</strong> Promote the 100g Jumbo Tub at RM36.00 to capture customers looking for long-term value.",
+          "<strong>Bundle Hook:</strong> Pair with Lychee Sunscreen for a 'RM29.90 Daily Defense Duo' on TikTok Live."
+        ]
+      },
+      sunscreen: {
+        title: "Price Comparison: Sunscreen SPF30 / SPF50 (30g–50g)",
+        g2gPrice: 15.30,
+        competitors: [
+          { brand: "Glad2Glow", name: "Lychee Vitamin Water Sunscreen SPF50 PA+++ (30g)", price: 15.30, platform: "Shopee / TikTok", notes: "Lightweight 3-in-1 tone up sunscreen" },
+          { brand: "Wardah", name: "UV Shield Essential Sunscreen Gel SPF30 (40ml)", price: 18.50, platform: "Shopee MY", notes: "Mass market entrant" },
+          { brand: "Sunplay", name: "Skin Aqua UV Moisture Milk SPF50 (40g)", price: 24.50, platform: "Shopee / Watsons", notes: "Japanese brand staple" },
+          { brand: "Skintific", name: "5X Ceramide Serum Sunscreen SPF50 (30g)", price: 25.00, platform: "Shopee MY", notes: "Top selling sunscreen on Shopee MY" },
+          { brand: "GlowMY", name: "UV Invisible Shield SPF50 (40g)", price: 26.00, platform: "TikTok Shop", notes: "Non-greasy claim" },
+          { brand: "Biore", name: "UV Aqua Rich Watery Essence SPF50 (50g)", price: 28.90, platform: "Shopee / Guardian", notes: "Traditional market benchmark" },
+          { brand: "Cosrx", name: "Aloe Soothing Sun Cream SPF50 (50ml)", price: 39.00, platform: "Shopee MY", notes: "Hydrating sun care" },
+          { brand: "SOME BY MI", name: "Truecica Mineral Calming Sunscreen (50ml)", price: 43.00, platform: "Shopee MY", notes: "Physical mineral barrier" },
+          { brand: "Kayman Beauty", name: "SunStick / Sunscreen SPF50 (50g)", price: 49.00, platform: "Shopee MY", notes: "Local D2C premium" }
+        ],
+        recommendations: [
+          "<strong>Unbeatable Entry Point:</strong> Priced at RM15.30, G2G is the most affordable SPF50 sunscreen with tone-up benefits in the viral D2C category.",
+          "<strong>UV Camera Push:</strong> Capitalize on UV test videos; emphasize 'SPF50 protection under RM16' in TikTok ad creative."
+        ]
+      },
+      cleanser: {
+        title: "Price Comparison: Facial Cleanser (70g–100g)",
+        g2gPrice: 16.00,
+        competitors: [
+          { brand: "Wardah", name: "Lightening Whip Facial Foam (100g)", price: 12.30, platform: "Shopee MY", notes: "Lowest price mass competitor" },
+          { brand: "Glad2Glow", name: "Milk Amino Acids Gentle Cleanser (80g)", price: 16.00, platform: "Shopee / TikTok", notes: "pH balanced gentle formula" },
+          { brand: "Skintific", name: "Damask Rose Whipped Cleanser (120g)", price: 17.58, platform: "Shopee MY", notes: "Competitive entry line" },
+          { brand: "Senka", name: "Perfect Whip Facial Foam (120g)", price: 18.90, platform: "Shopee MY", notes: "Japanese drugstore classic" },
+          { brand: "GlowMY", name: "Gentle Foaming Amino Wash (100g)", price: 24.00, platform: "TikTok Shop", notes: "Barrier friendly positioning" },
+          { brand: "Cosrx", name: "Low pH Good Morning Gel Cleanser (150ml)", price: 28.00, platform: "Shopee MY", notes: "Global cult favorite" },
+          { brand: "Skintific", name: "Panthenol Gel Cleanser (120ml)", price: 29.99, platform: "Shopee MY", notes: "Acne/barrier line" },
+          { brand: "Kayman Beauty", name: "CoalFace Soap / Gel Cleanser (120ml)", price: 35.00, platform: "Shopee MY", notes: "Local iconic charcoal wash" },
+          { brand: "SOME BY MI", name: "Bye Bye Blackhead 30Days Miracle Green Tea (120g)", price: 42.00, platform: "Shopee MY", notes: "Bubble cleanser" }
+        ],
+        recommendations: [
+          "<strong>Optimal Basket Builder:</strong> Glad2Glow Cleanser at RM16.00 is ideally priced to serve as an add-on item for free shipping thresholds (RM40+)."
+        ]
+      },
+      toner: {
+        title: "Price Comparison: Hydrating & Brightening Toner (80ml–120ml)",
+        g2gPrice: 19.50,
+        competitors: [
+          { brand: "Wardah", name: "Lightening Face Toner (125ml)", price: 14.50, platform: "Shopee MY", notes: "Entry level drugstore" },
+          { brand: "Glad2Glow", name: "Propolis / Niacinamide Essence Toner (80ml)", price: 19.50, platform: "Shopee / TikTok", notes: "Fast absorbing essence water" },
+          { brand: "GlowMY", name: "Clarifying Barrier Essence Toner (100ml)", price: 28.00, platform: "TikTok Shop", notes: "Slightly higher volume" },
+          { brand: "Skintific", name: "5X Ceramide Soothing Toner (80ml)", price: 33.50, platform: "Shopee MY", notes: "Top seller in category" },
+          { brand: "Cosrx", name: "AHA/BHA Clarifying Treatment Toner (150ml)", price: 38.00, platform: "Shopee MY", notes: "Exfoliating toner" },
+          { brand: "Hada Labo", name: "Gokujyun Hydrating Lotion (170ml)", price: 39.90, platform: "Watsons / Shopee", notes: "Hyaluronic benchmark" },
+          { brand: "SOME BY MI", name: "AHA BHA PHA 30 Days Miracle Toner (150ml)", price: 42.00, platform: "Shopee MY", notes: "Acne care toner" },
+          { brand: "Kayman Beauty", name: "Rosa Glow Treatment Essence (120ml)", price: 68.00, platform: "Shopee MY", notes: "High-end D2C essence" }
+        ],
+        recommendations: [
+          "<strong>Price Positioning:</strong> Glad2Glow at RM19.50 occupies the ideal sweet spot between basic drugstore toners and RM30+ barrier toners."
+        ]
+      }
+    };
+
+    // CHART VARIABLES
+    let priceChart = null;
+    let matrixChart = null;
+
+    // UPDATE DATA ON CATEGORY SELECTION CHANGE
+    function updateCategoryData() {
+      const categoryKey = document.getElementById('category-select').value;
+      const data = categoryDatasets[categoryKey];
+
+      // Update Header Title
+      document.getElementById('chart-title').innerText = data.title;
+
+      // Calculate Stats
+      const prices = data.competitors.map(c => c.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      const sum = prices.reduce((a, b) => a + b, 0);
+      const avgPrice = sum / prices.length;
+
+      const sortedPrices = [...prices].sort((a, b) => a - b);
+      const mid = Math.floor(sortedPrices.length / 2);
+      const medianPrice = sortedPrices.length % 2 !== 0 ? sortedPrices[mid] : (sortedPrices[mid - 1] + sortedPrices[mid]) / 2;
+
+      const g2gPrice = data.g2gPrice;
+      const percentDiff = (((avgPrice - g2gPrice) / avgPrice) * 100).toFixed(1);
+
+      // Update Stat Cards
+      document.getElementById('stat-min').innerText = `RM${minPrice.toFixed(2)}`;
+      document.getElementById('stat-max').innerText = `RM${maxPrice.toFixed(2)}`;
+      document.getElementById('stat-avg').innerText = `RM${avgPrice.toFixed(2)}`;
+      document.getElementById('stat-median').innerText = `RM${medianPrice.toFixed(2)}`;
+      document.getElementById('stat-g2g-price').innerText = `RM${g2gPrice.toFixed(2)}`;
+      document.getElementById('stat-percentile-statement').innerHTML = `Glad2Glow is <strong>${percentDiff}% below market average</strong> — positioned as a value leader in Malaysia.`;
+
+      // Update Table
+      const tbody = document.getElementById('competitor-table-body');
+      tbody.innerHTML = '';
+      data.competitors.forEach(item => {
+        const isG2G = item.brand === 'Glad2Glow';
+        const tr = document.createElement('tr');
+        tr.className = isG2G ? 'bg-g2g-50/70 font-semibold text-g2g-900 border-l-4 border-g2g-600' : 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 font-bold ${isG2G ? 'text-g2g-700' : 'text-slate-900'}">${item.brand}</td>
+          <td class="py-2.5 px-4">${item.name}</td>
+          <td class="py-2.5 px-4 text-right font-mono font-bold ${isG2G ? 'text-g2g-700' : 'text-slate-800'}">RM${item.price.toFixed(2)}</td>
+          <td class="py-2.5 px-4 text-slate-500 text-[11px]">${item.platform}</td>
+          <td class="py-2.5 px-4 text-slate-600">${item.notes}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('table-count').innerText = `${data.competitors.length} Brands Tracked`;
+
+      // Update Recommendations
+      const recsContainer = document.getElementById('recommendations-container');
+      recsContainer.innerHTML = '';
+      data.recommendations.forEach(rec => {
+        const div = document.createElement('div');
+        div.className = 'p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed flex items-start';
+        div.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-g2g-600 mr-2 flex-shrink-0 mt-0.5"></i><div>${rec}</div>`;
+        recsContainer.appendChild(div);
+      });
+      lucide.createIcons();
+
+      // Update Bar Chart
+      updateBarChart(data.competitors, avgPrice);
+
+      // Update Scatter Matrix Chart
+      updateScatterChart();
+    }
+
+    // DRAW CHART.JS BAR CHART
+    function updateBarChart(competitors, avgPrice) {
+      const sortedComp = [...competitors].sort((a, b) => a.price - b.price);
+      const labels = sortedComp.map(c => `${c.brand}`);
+      const prices = sortedComp.map(c => c.price);
+      const bgColors = sortedComp.map(c => c.brand === 'Glad2Glow' ? '#2E7D32' : (c.brand === 'GlowMY' ? '#FF7043' : '#CBD5E1'));
+      const borderColors = sortedComp.map(c => c.brand === 'Glad2Glow' ? '#1B5E20' : (c.brand === 'GlowMY' ? '#F4511E' : '#94A3B8'));
+
+      const ctx = document.getElementById('priceBarChart').getContext('2d');
+
+      if (priceChart) {
+        priceChart.destroy();
+      }
+
+      priceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Price (RM)',
+            data: prices,
+            backgroundColor: bgColors,
+            borderColor: borderColors,
+            borderWidth: 1.5,
+            borderRadius: 6,
+            barThickness: 18
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const comp = sortedComp[context.dataIndex];
+                  return `${comp.brand}: RM${comp.price.toFixed(2)} (${comp.name})`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: { color: '#F1F5F9' },
+              title: { display: true, text: 'Price on Shopee / TikTok Shop Malaysia (RM)', font: { size: 11 } }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: '500' } }
+            }
+          }
+        }
+      });
+    }
+
+    // DRAW MARKET POSITION MATRIX (SCATTER CHART)
+    function updateScatterChart() {
+      const ctx = document.getElementById('matrixScatterChart').getContext('2d');
+
+      if (matrixChart) {
+        matrixChart.destroy();
+      }
+
+      // Matrix Data Points: x = Price (RM), y = Perceived Active Concentration / Efficacy Score (1 to 10)
+      const matrixData = [
+        { x: 24.90, y: 8.5, brand: 'Glad2Glow (PDRN + 10% Niacinamide)', color: '#2E7D32', radius: 10 },
+        { x: 35.00, y: 7.8, brand: 'GlowMY Brightening', color: '#FF7043', radius: 8 },
+        { x: 32.76, y: 8.2, brand: 'Skintific 377 Serum', color: '#3B82F6', radius: 8 },
+        { x: 28.50, y: 7.2, brand: 'Wardah Symradiance', color: '#10B981', radius: 7 },
+        { x: 39.00, y: 8.0, brand: 'The Ordinary Niacinamide', color: '#64748B', radius: 7 },
+        { x: 42.00, y: 7.5, brand: 'SOME BY MI Yuja', color: '#F59E0B', radius: 7 },
+        { x: 48.00, y: 8.8, brand: 'Cosrx Niacinamide 15', color: '#8B5CF6', radius: 7 },
+        { x: 59.00, y: 8.6, brand: 'Kayman Beauty Hyalu-C', color: '#EC4899', radius: 7 }
+      ];
+
+      matrixChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Brand Positioning',
+            data: matrixData.map(d => ({ x: d.x, y: d.y })),
+            backgroundColor: matrixData.map(d => d.color),
+            pointRadius: matrixData.map(d => d.radius),
+            pointHoverRadius: 12
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const pt = matrixData[context.dataIndex];
+                  return `${pt.brand}: RM${pt.x.toFixed(2)} (Active Efficacy Index: ${pt.y}/10)`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display: true, text: 'Market Price (RM) → Higher Price', font: { size: 11, weight: 'bold' } },
+              min: 15,
+              max: 65,
+              grid: { color: '#F1F5F9' }
+            },
+            y: {
+              title: { display: true, text: 'Perceived Active Efficacy / Claims Concentration → Higher', font: { size: 11, weight: 'bold' } },
+              min: 6,
+              max: 10,
+              grid: { color: '#F1F5F9' }
+            }
+          }
+        }
+      });
+    }
+
+    // INITIALIZE PAGE ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      // Set current date
+      const now = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('current-date').innerText = now.toLocaleDateString('en-US', options);
+
+      // Load initial category
+      updateCategoryData();
+    });
+  </script>
+</body>
+</html>
